@@ -1,8 +1,8 @@
-# 🚀 TaskMaster API
+#  TaskMaster API
 
 Este é um projeto de API Backend para gerenciamento de tarefas (To-Do List), evoluído de um CRUD básico para uma arquitetura profissional utilizando **Node.js**, **Express 5** e **TypeScript**.
 
-## 🛠️ Evoluções Implementadas
+##  Evoluções Implementadas
 
 Diferente de um CRUD comum, este projeto aplica padrões de mercado para garantir escalabilidade e manutenção:
 
@@ -12,7 +12,7 @@ Diferente de um CRUD comum, este projeto aplica padrões de mercado para garanti
 - **Validação com Zod**: Esquemas rigorosos para garantir que apenas dados válidos (Payload e URL Params) cheguem à camada de serviço.
 - **Persistência Atômica**: Gerenciamento de IDs robusto e manipulação de arquivos JSON via `fs.promises`.
 
-## 📂 Estrutura de Pastas
+## Estrutura de Pastas
 
 ```text
 src/
