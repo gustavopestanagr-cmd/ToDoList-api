@@ -19,6 +19,5 @@ export const salvarBanco = async (dados: Tarefa[]): Promise<void> => {
 
 export const gerarProximoId = (tarefas: Tarefa[]): number => {
     if (tarefas.length === 0) return 1;
-    // Pega o maior ID atual e soma 1, evitando duplicatas se deletar o último
     return Math.max(...tarefas.map(t => t.id)) + 1;
 };

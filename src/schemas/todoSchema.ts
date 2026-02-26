@@ -13,6 +13,7 @@ export const paramsSchema = z.object({
 });
 export interface Tarefa {
     id: number;
+    userId: any
     titulo: string;
     concluida: boolean;
 }

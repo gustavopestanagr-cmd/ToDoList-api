@@ -5,33 +5,50 @@ import { AppError } from '../errors/appError.js';
 
 export const criarTarefa = async (req: Request, res: Response) => {
     const dadosValidados = tarefaSchema.parse(req.body);
+    const userId = req.user!.id;
+
     const tarefas = await todoService.lerBanco();
 
     const novaTarefa: Tarefa = {
-        id: tarefas.length > 0 ? tarefas[tarefas.length - 1]!.id + 1 : 1,
+        id: todoService.gerarProximoId(tarefas),
+        userId: userId,
         titulo: dadosValidados.titulo,
         concluida: false
     };
 
     tarefas.push(novaTarefa);
-    await todoService.salvarBanco(tarefas)
+    await todoService.salvarBanco(tarefas);
+
     res.status(201).json(novaTarefa);
 };
 
 export const verTarefa = async (req: Request, res: Response) => {
-    const bancoDeDados = await todoService.lerBanco()
-    res.json(bancoDeDados);
+    const userIdLogado = req.user?.id;
+
+    const bancoDeDados = await todoService.lerBanco();
+
+    const tarefasDoUsuario = bancoDeDados.filter(t => t.userId === userIdLogado);
+
+    res.json(tarefasDoUsuario);
+
 };
 
 export const deletarTarefa = async (req: Request, res: Response) => {
     const { id: idParaDeletar } = paramsSchema.parse(req.params);
+    const userIdLogado = req.user!.id;
+
     let bancoDeDados = await todoService.lerBanco();
 
+    const tarefa = bancoDeDados.find(t => t.id === idParaDeletar);
+
+    if (!tarefa) {
+        throw new AppError("Tarefa não encontrada", 404);
+    }
+    if (tarefa.userId !== userIdLogado) {
+        throw new AppError("Você não tem permissão para deletar esta tarefa", 403);
+    }
     const listaAtualizada = bancoDeDados.filter(t => t.id !== idParaDeletar);
 
-    if (listaAtualizada.length === bancoDeDados.length) {
-        return res.status(404).json({ erro: "Tarefa não encontrada para deletar!" });
-    }
     await todoService.salvarBanco(listaAtualizada);
     res.json({ mensagem: `Tarefa ${idParaDeletar} removida com sucesso!` });
 };
@@ -39,6 +56,18 @@ export const deletarTarefa = async (req: Request, res: Response) => {
 export const editarTarefa = async (req: Request, res: Response) => {
     const { id } = paramsSchema.parse(req.params);
     const dadosValidados = tarefaSchema.parse(req.body);
+    const userIdLogado = req.user!.id;
+
+    let bancoDeDados = await todoService.lerBanco();
+
+    const tarefa = bancoDeDados.find(t => t.id === id);
+
+    if (!tarefa) {
+        throw new AppError("Tarefa não encontrada", 404);
+    }
+    if (tarefa.userId !== userIdLogado) {
+        throw new AppError("Você não tem permissão para editar esta tarefa", 403);
+    }
 
     let tarefas = await todoService.lerBanco();
     const index = tarefas.findIndex(t => t.id === id);
