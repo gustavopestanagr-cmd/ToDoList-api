@@ -3,10 +3,13 @@ import express from 'express';
 import todoRoutes from './routes/todoRouter.js';
 import authRouter from './routes/authRouter.js';
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
+import { apiLimiter } from './middlewares/rateLimiter.js';
 
 const app = express();
 
 app.use(express.json());
+
+app.use(apiLimiter);
 
 app.use('/auth', authRouter);
 
