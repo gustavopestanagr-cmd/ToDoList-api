@@ -18,6 +18,12 @@ Este projeto demonstra a implementação prática de defesas contra vulnerabilid
 
 - **Fail-Safe Error Handling**: Middleware global que captura exceções e impede o vazamento de informações sensíveis do servidor (stack traces) em respostas HTTP 500.
 
+- **Rate Limiting (Anti-Brute Force & DoS)**: Implementação de limites de requisições por IP utilizando `express-rate-limit`.
+
+- **Auth Protection**: Restrição severa (5 tentativas a cada 15 min) para endpoints sensíveis (`/login`, `/registrar`), mitigando ataques de força bruta e preenchimento de credenciais (Credential Stuffing).
+
+- **Global Protection**: Controle de fluxo em toda a API para evitar sobrecarga do servidor e garantir a disponibilidad(Availability) do serviço.
+
 ## Evoluções de Arquitetura
 
 Além da segurança, o código segue padrões de mercado para escalabilidade:
@@ -52,3 +58,11 @@ src/
 - **Bearer Auth**: No Postman, utilize o token na aba Authorization para acessar as rotas de /tarefas.
 
 - **Teste de Permissão**: Tente editar uma tarefa de outro usuário e observe o sistema retornar 403 Forbidden, provando a eficácia da proteção contra IDOR.
+
+## 🚀 Roadmap de Segurança (Próximos Passos)
+
+Para elevar ainda mais o nível de segurança (nível produção), os próximos objetivos são:
+
+- [ ] **Refresh Tokens:** Implementar rotação de tokens para sessões mais seguras.
+- [ ] **Helmet.js:** Configurar cabeçalhos HTTP de segurança para mitigar ataques como Clickjacking e XSS.
+- [ ] **Logs de Auditoria:** Implementar um sistema de log (Winston) para registrar tentativas de acesso suspeitas.
