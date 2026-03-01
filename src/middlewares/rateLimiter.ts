@@ -1,6 +1,5 @@
 import rateLimit from "express-rate-limit";
 import { AppError } from "../errors/appError.js";
-import { error } from "node:console";
 
 export const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import todoRoutes from './routes/todoRouter.js';
 import authRouter from './routes/authRouter.js';
+import adminRouter from '../src/routes/adminRouter.js'
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
 import { apiLimiter } from './middlewares/rateLimiter.js';
 
@@ -14,6 +15,8 @@ app.use(apiLimiter);
 app.use('/auth', authRouter);
 
 app.use('/tarefas', todoRoutes);
+
+app.use('/admin', adminRouter);
 
 app.use(errorMiddleware);
 
