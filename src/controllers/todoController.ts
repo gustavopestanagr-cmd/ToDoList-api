@@ -33,9 +33,13 @@ export const verTarefa = async (req: Request, res: Response) => {
 };
 
 export const deletarTarefa = async (req: Request, res: Response) => {
+    if (!req.user) {
+        throw new AppError("Usuário não autenticado", 401);
+    }
+
     const { id: idParaDeletar } = paramsSchema.parse(req.params);
-    const userIdLogado = req.user!.id;
-    const roleDoUserLogado = req.user!.role;
+    const userIdLogado = req.user.id;
+    const roleDoUserLogado = req.user.role;
 
     let bancoDeDados = await todoService.lerBanco();
 
@@ -44,7 +48,7 @@ export const deletarTarefa = async (req: Request, res: Response) => {
     if (!tarefa) {
         throw new AppError("Tarefa não encontrada", 404);
     }
-    if (tarefa.userId !== userIdLogado || roleDoUserLogado === "admin") {
+    if (tarefa.userId !== userIdLogado && roleDoUserLogado !== "admin") {
         throw new AppError("Você não tem permissão para deletar esta tarefa", 403);
     }
     const listaAtualizada = bancoDeDados.filter(t => t.id !== idParaDeletar);
